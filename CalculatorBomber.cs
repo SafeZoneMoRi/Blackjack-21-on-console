@@ -1,4 +1,4 @@
-﻿namespace ProjectBomber
+﻿namespace Porject_Gi_113
 {
     public static class Calculator
     {

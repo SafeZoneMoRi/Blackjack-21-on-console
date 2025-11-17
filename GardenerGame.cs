@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-
-namespace Porject_Gi_113
+﻿namespace Porject_Gi_113
 {
     public class GardenerGame
     {
