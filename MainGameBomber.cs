@@ -6,64 +6,64 @@
 
         public static void StartBlackBomber()
         {
+            string[] menuItems = { "Start Game", "How to Play", "View Leaderboard", "Admin Tool", "Exit" };
+            int selected = 0;
+
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("==== Bomber Game ====");
-                Console.WriteLine("1. Start Game");
-                Console.WriteLine("2. How to Play");
-                Console.WriteLine("3. View Leaderboard");
-                Console.WriteLine("4. Admin Tool");
-                Console.WriteLine("5. Exit");
-                Console.Write("Select: ");
+                Banner.ShowMenuBomber();
 
-                string select = Console.ReadLine();
+                // แสดงเมนู พร้อม highlight
+                for (int i = 0; i < menuItems.Length; i++)
+                    Console.WriteLine((i == selected ? "> " : "  ") + menuItems[i]);
 
-                switch (select)
+                // อ่านปุ่ม
+                var key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
+                    selected = (selected - 1 + menuItems.Length) % menuItems.Length;
+                else if (key == ConsoleKey.DownArrow)
+                    selected = (selected + 1) % menuItems.Length;
+                else if (key == ConsoleKey.Enter)
                 {
-                    case "1":
-                        PlayGame();
-                        break;
-
-                    case "2":
-                        HowToPlayBomber.RuleToPlay();
-                        break;
-
-                    case "3":
-                        Console.Clear();
-                        Calculator.ShowLeaderboard();
-                        Console.WriteLine("\nPress any key to return...");
-                        Console.ReadKey();
-                        break;
-
-                    case "4":
-                        Console.Clear();
-                        Console.Write("Enter admin password: ");
-                        string password = Console.ReadLine();
-                        if (password == "Toonnaja")
-                        {
-                            AdminToolBomber.ShowAdminMenu();
-                        }
-                        else
-                        {
-                            Console.WriteLine("Incorrect password! Press any key to return...");
+                    switch (selected)
+                    {
+                        case 0:
+                            PlayGame();
+                            break;
+                        case 1:
+                            HowToPlayBomber.RuleToPlay();
+                            break;
+                        case 2:
+                            Console.Clear();
+                            Calculator.ShowLeaderboard();
+                            Console.WriteLine("\nPress any key to return...");
                             Console.ReadKey();
-                        }
-                        break;
-
-                    case "5":
-                        return;
-
-                    default:
-                        Console.WriteLine("Invalid input! Press any key...");
-                        Console.ReadKey();
-                        break;
+                            break;
+                        case 3:
+                            Console.Clear();
+                            Console.Write("Enter admin password: ");
+                            string password = Console.ReadLine();
+                            if (password == "Toonnaja")
+                                AdminToolBomber.ShowAdminMenu();
+                            else
+                            {
+                                Console.WriteLine("Incorrect password! Press any key to return...");
+                                Console.ReadKey();
+                            }
+                            break;
+                        case 4:
+                            return;
+                    }
                 }
             }
         }
+
         private static void PlayGame()
         {
             Console.Clear();
+            Banner.NamePlayer();
             Console.Write("Enter Your Name: ");
             string playerName = Console.ReadLine();
             int totalScore = 0;
@@ -71,6 +71,7 @@
             for (int level = 1; level <= 10; level++)
             {
                 Console.Clear();
+                Banner.BomberStartMision();
                 Console.WriteLine($"Mission ==> {level}");
 
                 int score = LevelGame();
@@ -80,7 +81,7 @@
                 if (score == 0)
                 {
                     Console.WriteLine($"\nMission Failed! Total Score: {totalScore}");
-                    Calculator.SaveScore(playerName, totalScore); // บันทึกคะแนนแม้แพ้
+                    Calculator.SaveScore(playerName, totalScore);
                     Console.WriteLine("Returning to menu...");
                     Console.ReadKey();
                     return;
@@ -103,7 +104,6 @@
         {
             int bombX = bomber.Next(1, 4);
             int bombY = bomber.Next(1, 4);
-            // Console.WriteLine($"DEBUG: Bomb is at {bombX},{bombY}");
             int miss = 0;
 
             while (miss < 3)
@@ -140,7 +140,9 @@
                 }
             }
 
-            Console.WriteLine("Booooommmmmmmm! Mission Failed.");
+            Console.Clear();
+            Banner.ShowKaboom();
+            Console.WriteLine("\nMission Failed.");
             return 0;
         }
     }

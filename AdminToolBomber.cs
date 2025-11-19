@@ -4,41 +4,57 @@
     {
         public static void ShowAdminMenu()
         {
+            string[] options = 
+            {
+                "View Leaderboard",
+                "Reset Leaderboard",
+                "Back to Main Menu"
+            };
+
+            int selected = 0;
+
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("=== Admin Tool ===");
-                Console.WriteLine("1. View Leaderboard");
-                Console.WriteLine("2. Reset Leaderboard");
-                Console.WriteLine("3. Back to Main Menu");
-                Console.Write("Select: ");
+                Console.WriteLine("=== Admin Tool ===\n");
 
-                string select = Console.ReadLine();
-
-                switch (select)
+                // แสดงเมนูพร้อมตัวชี้
+                for (int i = 0; i < options.Length; i++)
                 {
-                    case "1":
-                        Console.Clear();
-                        Calculator.ShowLeaderboard();
-                        Console.WriteLine("\nPress any key to return...");
-                        Console.ReadKey();
-                        break;
+                    Console.WriteLine((i == selected ? "> " : "  ") + options[i]);
+                }
 
-                    case "2":
-                        Console.Clear();
-                        Calculator.ResetLeaderboard();
-                        Console.WriteLine("Leaderboard has been reset!");
-                        Console.WriteLine("Press any key to return...");
-                        Console.ReadKey();
-                        break;
+                // รับปุ่ม
+                ConsoleKey key = Console.ReadKey(true).Key;
 
-                    case "3":
-                        return;
+                if (key == ConsoleKey.UpArrow)
+                    selected = (selected - 1 + options.Length) % options.Length;
 
-                    default:
-                        Console.WriteLine("Invalid input! Press any key...");
-                        Console.ReadKey();
-                        break;
+                else if (key == ConsoleKey.DownArrow)
+                    selected = (selected + 1) % options.Length;
+
+                else if (key == ConsoleKey.Enter)
+                {
+                    switch (selected)
+                    {
+                        case 0: // View Leaderboard
+                            Console.Clear();
+                            Calculator.ShowLeaderboard();
+                            Console.WriteLine("\nPress any key to return...");
+                            Console.ReadKey();
+                            break;
+
+                        case 1: // Reset Leaderboard
+                            Console.Clear();
+                            Calculator.ResetLeaderboard();
+                            Console.WriteLine("Leaderboard has been reset!");
+                            Console.WriteLine("\nPress any key to return...");
+                            Console.ReadKey();
+                            break;
+
+                        case 2: // Back
+                            return;
+                    }
                 }
             }
         }

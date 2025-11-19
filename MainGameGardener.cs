@@ -4,39 +4,51 @@
     {
         public static void StartGardener()
         {
-            Console.Title = "Gardener";
+            string[] menuItems =
+            {
+                "StartGame", 
+                "Rule Game", 
+                "Exit"
+            };
+            int selected = 0;
 
             while (true)
             {
                 Console.Clear();
-                Console.WriteLine("Select an option:" +
-                                  "\nPress 1 for play" +
-                                  "\nPress 2 for Rule" +
-                                  "\nPress 3 for exit");
-                Console.WriteLine("Please select an option: ");
-                bool checkNum = int.TryParse(Console.ReadLine(), out int numSelect);
+                Banner.ShowMenuGardener();
 
-                if (!checkNum)
+                // แสดงเมนูพร้อมลูกศร
+                for (int i = 0; i < menuItems.Length; i++)
                 {
-                    Console.WriteLine("Incorrect option. Please enter 1, 2, or 3.");
-                    Console.ReadKey();
-                    continue;
+                    if (i == selected)
+                        Console.WriteLine("> " + menuItems[i]);
+                    else
+                        Console.WriteLine("  " + menuItems[i]);
                 }
 
-                switch (numSelect)
+                ConsoleKey key = Console.ReadKey(true).Key;
+
+                if (key == ConsoleKey.UpArrow)
                 {
-                    case 1:
-                        new GardenerGame().Play();
-                        break;
-                    case 2:
-                        ShowHowToPlay();
-                        break;
-                    case 3:
-                        return;
-                    default:
-                        Console.WriteLine("Incorrect option. Please enter 1, 2, or 3.");
-                        Console.ReadKey();
-                        break;
+                    selected = (selected - 1 + menuItems.Length) % menuItems.Length;
+                }
+                else if (key == ConsoleKey.DownArrow)
+                {
+                    selected = (selected + 1) % menuItems.Length;
+                }
+                else if (key == ConsoleKey.Enter)
+                {
+                    switch (selected)
+                    {
+                        case 0: // Play
+                            new GardenerGame().Play();
+                            break;
+                        case 1: // Rule
+                            ShowHowToPlay();
+                            break;
+                        case 2: // Exit
+                            return;
+                    }
                 }
             }
         }
@@ -49,7 +61,7 @@
                               "\n2.Select item match the enemy" +
                               "\nWorm == Spray\nBeetle == Axe\nAphid == Hormone\nTornado == Rope\nHeat == Water");
             Console.WriteLine("\nPress 1 == Spray\nPress 2 == Axe\nPress 3 == Hormone\nPress 4 == Rope\nPress 5 == Water");
-            Console.WriteLine("Press any key to return to the menu");
+            Console.WriteLine("\nPress any key to return to the menu");
             Console.ReadKey();
         }
     }
