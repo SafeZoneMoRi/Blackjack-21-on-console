@@ -13,12 +13,10 @@
             {
                 Console.Clear();
                 Banner.ShowMenuBomber();
-
-                // แสดงเมนู พร้อม highlight
+                
                 for (int i = 0; i < menuItems.Length; i++)
                     Console.WriteLine((i == selected ? "> " : "  ") + menuItems[i]);
-
-                // อ่านปุ่ม
+                
                 var key = Console.ReadKey(true).Key;
 
                 if (key == ConsoleKey.UpArrow)

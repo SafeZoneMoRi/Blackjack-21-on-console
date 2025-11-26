@@ -16,8 +16,7 @@
             {
                 Console.Clear();
                 Banner.ShowMenuGardener();
-
-                // แสดงเมนูพร้อมลูกศร
+                
                 for (int i = 0; i < menuItems.Length; i++)
                 {
                     if (i == selected)
@@ -40,13 +39,13 @@
                 {
                     switch (selected)
                     {
-                        case 0: // Play
+                        case 0:
                             new GardenerGame().Play();
                             break;
-                        case 1: // Rule
+                        case 1:
                             ShowHowToPlay();
                             break;
-                        case 2: // Exit
+                        case 2:
                             return;
                     }
                 }

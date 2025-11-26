@@ -165,8 +165,7 @@
 
             AskReplay();
         }
-
-        // เมนูเดิมพันใหม่ พร้อม All In และ Custom
+        
         static int ShowBetMenu()
         {
             int selected = 0;
