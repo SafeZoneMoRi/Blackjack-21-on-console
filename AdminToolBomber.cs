@@ -17,14 +17,12 @@
             {
                 Console.Clear();
                 Console.WriteLine("=== Admin Tool ===\n");
-
-                // แสดงเมนูพร้อมตัวชี้
+                
                 for (int i = 0; i < options.Length; i++)
                 {
                     Console.WriteLine((i == selected ? "> " : "  ") + options[i]);
                 }
-
-                // รับปุ่ม
+                
                 ConsoleKey key = Console.ReadKey(true).Key;
 
                 if (key == ConsoleKey.UpArrow)
@@ -37,14 +35,14 @@
                 {
                     switch (selected)
                     {
-                        case 0: // View Leaderboard
+                        case 0:
                             Console.Clear();
                             Calculator.ShowLeaderboard();
                             Console.WriteLine("\nPress any key to return...");
                             Console.ReadKey();
                             break;
 
-                        case 1: // Reset Leaderboard
+                        case 1:
                             Console.Clear();
                             Calculator.ResetLeaderboard();
                             Console.WriteLine("Leaderboard has been reset!");
@@ -52,7 +50,7 @@
                             Console.ReadKey();
                             break;
 
-                        case 2: // Back
+                        case 2:
                             return;
                     }
                 }

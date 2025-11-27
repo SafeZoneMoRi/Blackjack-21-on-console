@@ -6,7 +6,7 @@ public class CardDisplay
     {
         if (cards.Count == 0)
         {
-            Console.WriteLine("(ไม่มีไพ่)");
+            Console.WriteLine("(no cards)");
             return;
         }
 

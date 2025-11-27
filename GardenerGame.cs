@@ -22,8 +22,7 @@
                 Console.Clear();
                 Console.WriteLine($"Day {day}");
                 Console.WriteLine($"Tree HP: {treeHp}\n");
-
-                // 🔥 แสดงต้นไม้ตาม HP ปัจจุบัน
+                
                 ShowTreeState();
                 Console.WriteLine();
 

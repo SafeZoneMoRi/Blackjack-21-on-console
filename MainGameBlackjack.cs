@@ -7,7 +7,7 @@
         public static void StartBlackjack()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = "🃏 Blackjack - Console Game";
+            Console.Title = " Blackjack - Console Game";
             ShowMenu();
         }
 
@@ -50,11 +50,11 @@
         {
             Console.Clear();
             Banner.ToturialMenuBanner();
-            Console.WriteLine("\n🎯 เป้าหมาย: ให้แต้มใกล้ 21 มากที่สุด (แต่ห้ามเกิน)");
-            Console.WriteLine("- ไพ่ J, Q, K = 10");
-            Console.WriteLine("- ไพ่ A = 1 หรือ 11 แล้วแต่สถานการณ์");
-            Console.WriteLine("- ใช้เมนู Hit / Stand เพื่อเล่น");
-            Console.WriteLine("\nกดปุ่มอะไรก็ได้ เพื่อกลับ...");
+            Console.WriteLine("\nObjective: Get as close to 21 as possible (but not over)");
+            Console.WriteLine("- card J, Q, K = 10");
+            Console.WriteLine("- A card = 1 or 11 depending on the situation");
+            Console.WriteLine("- Use the Hit/Stand menu to play");
+            Console.WriteLine("\nPress any button to return...");
             Console.ReadKey();
         }
 
@@ -64,8 +64,8 @@
             {
                 Console.Clear();
                 Banner.ShowEndBanner();
-                Console.WriteLine("\n💀 เงินหมด! กลับไปหน้าเมนูหลัก...");
-                Console.WriteLine("กดปุ่มอะไรก็ได้ เพื่อกลับ...");
+                Console.WriteLine("\n Out of money! Return to main menu...");
+                Console.WriteLine("Press any button to return...");
                 Console.ReadKey();
                 return;
             }
@@ -86,16 +86,16 @@
             {
                 Console.Clear();
                 Banner.ShowGameBanner();
-                Console.WriteLine($"💰 เงินของคุณ: {playerBalance}฿ | เดิมพัน: {bet}฿");
-                Console.WriteLine("🧍‍♂️ Player:");
+                Console.WriteLine($"Your money: {playerBalance}฿ | Bet: {bet}฿");
+                Console.WriteLine(" Player:");
                 CardDisplay.ShowCardGUI(player.Cards);
                 Console.WriteLine($"\nTotal: {player.GetTotal()}");
-                Console.WriteLine("\n🤵 Dealer:");
+                Console.WriteLine("\n Dealer:");
                 CardDisplay.ShowCardGUI(dealer.Cards, hideFirst: true);
 
                 if (player.GetTotal() == 21)
                 {
-                    Console.WriteLine("🎉 Blackjack! You win!");
+                    Console.WriteLine(" Blackjack! You win!");
                     playerBalance += bet * 2;
                     AskReplay();
                     return;
@@ -110,11 +110,11 @@
                     {
                         Console.Clear();
                         Banner.ShowGameBanner();
-                        Console.WriteLine($"💰 เงินของคุณ: {playerBalance}฿ | เดิมพัน: {bet}฿");
-                        Console.WriteLine("🧍‍♂️ Player:");
+                        Console.WriteLine($" Your money: {playerBalance}฿ | Bet: {bet}฿"); 
+                        Console.WriteLine(" Player:");
                         CardDisplay.ShowCardGUI(player.Cards);
                         Console.WriteLine($"\nTotal: {player.GetTotal()}");
-                        Console.WriteLine("\n💀 Bust! Dealer wins!");
+                        Console.WriteLine("\n Bust! Dealer wins!");
                         AskReplay();
                         return;
                     }
@@ -125,7 +125,7 @@
                 }
             }
 
-            Console.WriteLine("\n🤵 Dealer’s Turn:");
+            Console.WriteLine("\n Dealer’s Turn:"); 
             CardDisplay.ShowCardGUI(dealer.Cards);
 
             while (dealer.GetTotal() < 17)
@@ -133,11 +133,11 @@
                 dealer.AddCard(deck.DrawCard());
                 Console.Clear();
                 Banner.ShowGameBanner();
-                Console.WriteLine($"💰 เงินของคุณ: {playerBalance}฿ | เดิมพัน: {bet}฿");
-                Console.WriteLine("🧍‍♂️ Player:");
+                Console.WriteLine($" Your money: {playerBalance}฿ | bet: {bet}฿");
+                Console.WriteLine("️ Player:");
                 CardDisplay.ShowCardGUI(player.Cards);
                 Console.WriteLine($"\nTotal: {player.GetTotal()}");
-                Console.WriteLine("\n🤵 Dealer:");
+                Console.WriteLine("\n Dealer:");
                 CardDisplay.ShowCardGUI(dealer.Cards);
                 Thread.Sleep(800);
             }
@@ -150,17 +150,17 @@
 
             if (dTotal > 21 || pTotal > dTotal)
             {
-                Console.WriteLine("🎉 You Win!");
+                Console.WriteLine(" You Win!");
                 playerBalance += bet * 2;
             }
             else if (pTotal == dTotal)
             {
-                Console.WriteLine("🤝 Draw!");
+                Console.WriteLine(" Draw!");
                 playerBalance += bet;
             }
             else
             {
-                Console.WriteLine("💀 Dealer Wins!");
+                Console.WriteLine(" Dealer Wins!");
             }
 
             AskReplay();
@@ -177,18 +177,18 @@
             {
                 Console.Clear();
                 Banner.ShowMoneyBanner();
-                Console.WriteLine($"\n💰 เงินของคุณ: {playerBalance}฿");
-                Console.WriteLine("💵 เลือกจำนวนเดิมพัน:");
+                Console.WriteLine($"\n Your money: {playerBalance}฿");
+                Console.WriteLine(" Select bet amount:");
 
                 for (int i = 0; i < betOptions.Length; i++)
                 {
                     string label = betOptions[i] switch
                     {
-                        -1 => "Custom (ระบุเอง)",
+                        -1 => "Custom (Specify the amount)",
                         0 => "All In",
                         _ => betOptions[i] + "฿"
                     };
-                    Console.WriteLine((i == selected ? "▶ " : "  ") + label);
+                    Console.WriteLine((i == selected ? "> " : "  ") + label);
                 }
 
                 ConsoleKey key = Console.ReadKey(true).Key;
@@ -201,11 +201,11 @@
                     {
                         while (true)
                         {
-                            Console.Write("\n💵 ระบุจำนวนเงินเดิมพัน: ");
+                            Console.Write("\n Select bet amount: ");
                             string input = Console.ReadLine();
                             if (int.TryParse(input, out int customBet) && customBet > 0 && customBet <= playerBalance)
                                 return customBet;
-                            Console.WriteLine($"⚠️ ใส่จำนวนเงินที่คุณมี (1-{playerBalance})");
+                            Console.WriteLine($" Enter the amount you have (1-{playerBalance})");
                         }
                     }
                     else
@@ -221,16 +221,19 @@
         {
             int selected = 0;
             string[] options = { "Hit", "Stand" };
-            int top = Console.CursorTop;
+
+            // Cursor วางไว้หลังสุดของหน้าจอ (ลดลง 5 เพื่อปลอดภัย)
+            int safeTop = Math.Max(Console.WindowHeight - 5, 0);
 
             while (true)
             {
-                Console.SetCursorPosition(0, top);
+                Console.SetCursorPosition(0, safeTop);
+
                 for (int i = 0; i < options.Length; i++)
                 {
                     Console.Write(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(0, top + i);
-                    Console.WriteLine((i == selected ? "▶ " : "  ") + options[i]);
+                    Console.SetCursorPosition(0, safeTop + i);
+                    Console.WriteLine((i == selected ? "> " : "  ") + options[i]);
                 }
 
                 ConsoleKey key = Console.ReadKey(true).Key;
@@ -253,7 +256,7 @@
                 {
                     Console.Write(new string(' ', Console.WindowWidth));
                     Console.SetCursorPosition(0, top + i);
-                    Console.WriteLine((i == selected ? "▶ " : "  ") + items[i]);
+                    Console.WriteLine((i == selected ? "> " : "  ") + items[i]);
                 }
 
                 ConsoleKey key = Console.ReadKey(true).Key;
