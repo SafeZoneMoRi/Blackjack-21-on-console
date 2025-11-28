@@ -7,19 +7,14 @@
         public static void StartBlackjack()
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-            Console.Title = " Blackjack - Console Game";
+            Console.Title = "Blackjack - Console Game";
             ShowMenu();
         }
 
         static void ShowMenu()
         {
             int selected = 0;
-            string[] menuItems =
-            {
-                "Start Game", 
-                "How to Play", 
-                "Exit"
-            };
+            string[] menuItems = { "Start Game", "How to Play", "Exit" };
 
             while (true)
             {
@@ -36,7 +31,7 @@
                 {
                     switch (selected)
                     {
-                        case 0: PlayGame(); break;
+                        case 0: PlayGameLoop(); break;
                         case 1: ShowHowToPlay(); break;
                         case 2: return;
                     }
@@ -54,21 +49,32 @@
             Console.WriteLine("- card J, Q, K = 10");
             Console.WriteLine("- A card = 1 or 11 depending on the situation");
             Console.WriteLine("- Use the Hit/Stand menu to play");
-            Console.WriteLine("\nPress any button to return...");
+            Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
+        }
+
+        static void PlayGameLoop()
+        {
+            bool playAgain;
+            do
+            {
+                PlayGame();
+                if (playerBalance <= 0)
+                {
+                    Console.Clear();
+                    Banner.ShowEndBanner();
+                    Console.WriteLine("\nOut of money! Return to main menu...");
+                    Console.WriteLine("Press any key to return...");
+                    Console.ReadKey();
+                    break;
+                }
+                playAgain = AskReplayMenu();
+            } while (playAgain);
         }
 
         static void PlayGame()
         {
-            if (playerBalance <= 0)
-            {
-                Console.Clear();
-                Banner.ShowEndBanner();
-                Console.WriteLine("\n Out of money! Return to main menu...");
-                Console.WriteLine("Press any button to return...");
-                Console.ReadKey();
-                return;
-            }
+            if (playerBalance <= 0) return;
 
             var deck = new Deck();
             var player = new Hand();
@@ -76,7 +82,7 @@
 
             int bet = ShowBetMenu();
             playerBalance -= bet;
-
+            
             player.AddCard(deck.DrawCard());
             dealer.AddCard(deck.DrawCard());
             player.AddCard(deck.DrawCard());
@@ -87,22 +93,20 @@
                 Console.Clear();
                 Banner.ShowGameBanner();
                 Console.WriteLine($"Your money: {playerBalance}฿ | Bet: {bet}฿");
-                Console.WriteLine(" Player:");
+                Console.WriteLine("Player:");
                 CardDisplay.ShowCardGUI(player.Cards);
                 Console.WriteLine($"\nTotal: {player.GetTotal()}");
-                Console.WriteLine("\n Dealer:");
+                Console.WriteLine("\nDealer:");
                 CardDisplay.ShowCardGUI(dealer.Cards, hideFirst: true);
 
                 if (player.GetTotal() == 21)
                 {
-                    Console.WriteLine(" Blackjack! You win!");
+                    Console.WriteLine("Blackjack! You win!");
                     playerBalance += bet * 2;
-                    AskReplay();
                     return;
                 }
 
                 string choice = HitStandMenu();
-
                 if (choice == "Hit")
                 {
                     player.AddCard(deck.DrawCard());
@@ -110,22 +114,18 @@
                     {
                         Console.Clear();
                         Banner.ShowGameBanner();
-                        Console.WriteLine($" Your money: {playerBalance}฿ | Bet: {bet}฿"); 
-                        Console.WriteLine(" Player:");
+                        Console.WriteLine($"Your money: {playerBalance}฿ | Bet: {bet}฿");
+                        Console.WriteLine("Player:");
                         CardDisplay.ShowCardGUI(player.Cards);
                         Console.WriteLine($"\nTotal: {player.GetTotal()}");
-                        Console.WriteLine("\n Bust! Dealer wins!");
-                        AskReplay();
+                        Console.WriteLine("\nBust! Dealer wins!");
                         return;
                     }
                 }
-                else if (choice == "Stand")
-                {
-                    break;
-                }
+                else break;
             }
-
-            Console.WriteLine("\n Dealer’s Turn:"); 
+            
+            Console.WriteLine("\nDealer’s Turn:");
             CardDisplay.ShowCardGUI(dealer.Cards);
 
             while (dealer.GetTotal() < 17)
@@ -133,52 +133,47 @@
                 dealer.AddCard(deck.DrawCard());
                 Console.Clear();
                 Banner.ShowGameBanner();
-                Console.WriteLine($" Your money: {playerBalance}฿ | bet: {bet}฿");
-                Console.WriteLine("️ Player:");
+                Console.WriteLine($"Your money: {playerBalance}฿ | Bet: {bet}฿");
+                Console.WriteLine("Player:");
                 CardDisplay.ShowCardGUI(player.Cards);
                 Console.WriteLine($"\nTotal: {player.GetTotal()}");
-                Console.WriteLine("\n Dealer:");
+                Console.WriteLine("\nDealer:");
                 CardDisplay.ShowCardGUI(dealer.Cards);
                 Thread.Sleep(800);
             }
 
             int pTotal = player.GetTotal();
             int dTotal = dealer.GetTotal();
-
             Console.WriteLine($"\nYour Total: {pTotal}");
             Console.WriteLine($"Dealer Total: {dTotal}");
 
             if (dTotal > 21 || pTotal > dTotal)
             {
-                Console.WriteLine(" You Win!");
+                Console.WriteLine("You Win!");
                 playerBalance += bet * 2;
             }
             else if (pTotal == dTotal)
             {
-                Console.WriteLine(" Draw!");
+                Console.WriteLine("Draw!");
                 playerBalance += bet;
             }
             else
             {
-                Console.WriteLine(" Dealer Wins!");
+                Console.WriteLine("Dealer Wins!");
             }
-
-            AskReplay();
         }
 
-        // เมนูเดิมพันใหม่ พร้อม All In และ Custom
         static int ShowBetMenu()
         {
             int selected = 0;
-            int[] betOptions = new int[] { 100, 200, 500, -1, 0 }; // -1 = Custom, 0 = All In
-            int top = Console.CursorTop;
+            int[] betOptions = { 100, 200, 500, -1, 0 };
 
             while (true)
             {
                 Console.Clear();
                 Banner.ShowMoneyBanner();
-                Console.WriteLine($"\n Your money: {playerBalance}฿");
-                Console.WriteLine(" Select bet amount:");
+                Console.WriteLine($"\nYour money: {playerBalance}฿");
+                Console.WriteLine("Select bet amount:");
 
                 for (int i = 0; i < betOptions.Length; i++)
                 {
@@ -197,15 +192,15 @@
                 else if (key == ConsoleKey.Enter)
                 {
                     if (betOptions[selected] == 0) return playerBalance; // All In
-                    else if (betOptions[selected] == -1) // Custom
+                    else if (betOptions[selected] == -1)
                     {
                         while (true)
                         {
-                            Console.Write("\n Select bet amount: ");
+                            Console.Write("\nSelect bet amount: ");
                             string input = Console.ReadLine();
                             if (int.TryParse(input, out int customBet) && customBet > 0 && customBet <= playerBalance)
                                 return customBet;
-                            Console.WriteLine($" Enter the amount you have (1-{playerBalance})");
+                            Console.WriteLine($"Enter the amount you have (1-{playerBalance})");
                         }
                     }
                     else
@@ -221,16 +216,13 @@
         {
             int selected = 0;
             string[] options = { "Hit", "Stand" };
-
-            // Cursor วางไว้หลังสุดของหน้าจอ (ลดลง 5 เพื่อปลอดภัย)
-            int safeTop = Math.Max(Console.WindowHeight - 5, 0);
+            int safeTop = Math.Max(Console.WindowHeight - options.Length - 1, 0);
 
             while (true)
             {
-                Console.SetCursorPosition(0, safeTop);
-
                 for (int i = 0; i < options.Length; i++)
                 {
+                    Console.SetCursorPosition(0, safeTop + i);
                     Console.Write(new string(' ', Console.WindowWidth));
                     Console.SetCursorPosition(0, safeTop + i);
                     Console.WriteLine((i == selected ? "> " : "  ") + options[i]);
@@ -247,15 +239,15 @@
         {
             int selected = 0;
             string[] items = { "Yes", "No" };
-            int top = Console.CursorTop;
+            int safeTop = Math.Max(Console.WindowHeight - items.Length - 1, 0);
 
             while (true)
             {
-                Console.SetCursorPosition(0, top);
                 for (int i = 0; i < items.Length; i++)
                 {
+                    Console.SetCursorPosition(0, safeTop + i);
                     Console.Write(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(0, top + i);
+                    Console.SetCursorPosition(0, safeTop + i);
                     Console.WriteLine((i == selected ? "> " : "  ") + items[i]);
                 }
 
@@ -264,12 +256,6 @@
                 else if (key == ConsoleKey.DownArrow) selected = (selected + 1) % items.Length;
                 else if (key == ConsoleKey.Enter) return selected == 0;
             }
-        }
-
-        static void AskReplay()
-        {
-            bool playAgain = AskReplayMenu();
-            if (playAgain) PlayGame();
         }
     }
 }
