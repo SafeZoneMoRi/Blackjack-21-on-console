@@ -1,4 +1,4 @@
-﻿namespace Porject_Gi_113
+namespace Porject_Gi_113
 {
     public static class MainGameBomber
     {
