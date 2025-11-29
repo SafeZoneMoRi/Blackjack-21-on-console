@@ -59,7 +59,7 @@
                               "\n1.Press 1 - 5 select item to protect your tree" +
                               "\n2.Select item match the enemy" +
                               "\nWorm == Spray\nBeetle == Axe\nAphid == Hormone\nTornado == Rope\nHeat == Water");
-            Console.WriteLine("\nPress 1 == Spray\nPress 2 == Axe\nPress 3 == Hormone\nPress 4 == Rope\nPress 5 == Water");
+            Console.WriteLine("\nMove cursor to select");
             Console.WriteLine("\nPress any key to return to the menu");
             Console.ReadKey();
         }

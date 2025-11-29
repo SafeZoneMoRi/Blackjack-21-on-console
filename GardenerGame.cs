@@ -4,7 +4,7 @@
     {
         private int treeHp = 100;
         private int[] timePerDay = { 10, 8, 6, 5, 4, 3, 3 };
-        private EventManager _eventGardener = new EventManager();
+        private EventGardener _eventGardener = new EventGardener();
         private PlayerGardener player = new PlayerGardener();
 
         public void Play()

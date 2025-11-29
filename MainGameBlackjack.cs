@@ -10,11 +10,11 @@
             Console.Title = "Blackjack - Console Game";
             ShowMenu();
         }
-
+        
         static void ShowMenu()
         {
             int selected = 0;
-            string[] menuItems = { "Start Game", "How to Play", "Exit" };
+            string[] menuItems = { "Start Game", "How to Play", "Reset Game", "Exit" };
 
             while (true)
             {
@@ -33,45 +33,78 @@
                     {
                         case 0: PlayGameLoop(); break;
                         case 1: ShowHowToPlay(); break;
-                        case 2: return;
+                        case 2: ResetGame(); break;
+                        case 3: return;
                     }
                 }
-
-                Console.SetCursorPosition(0, 0);
             }
         }
+        
+        static void ResetGame()
+        {
+            playerBalance = 1000;
 
+            Console.Clear();
+            Console.WriteLine("=== Game Reset ===");
+            Console.WriteLine("Your money has been restored to 1000฿");
+            Console.WriteLine("Press any key to return...");
+            Console.ReadKey();
+        }
+        
         static void ShowHowToPlay()
         {
             Console.Clear();
             Banner.ToturialMenuBanner();
             Console.WriteLine("\nObjective: Get as close to 21 as possible (but not over)");
-            Console.WriteLine("- card J, Q, K = 10");
-            Console.WriteLine("- A card = 1 or 11 depending on the situation");
-            Console.WriteLine("- Use the Hit/Stand menu to play");
+            Console.WriteLine("- J, Q, K = 10");
+            Console.WriteLine("- A = 1 or 11");
+            Console.WriteLine("- Choose Hit or Stand");
             Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
-
+        
         static void PlayGameLoop()
         {
             bool playAgain;
+
             do
             {
                 PlayGame();
+
                 if (playerBalance <= 0)
                 {
-                    Console.Clear();
-                    Banner.ShowEndBanner();
-                    Console.WriteLine("\nOut of money! Return to main menu...");
-                    Console.WriteLine("Press any key to return...");
-                    Console.ReadKey();
-                    break;
+                    bool choose = ShowOutOfMoneyMenu();
+                    if (choose) ResetGame();
+                    return;
                 }
+
                 playAgain = AskReplayMenu();
             } while (playAgain);
         }
+        
+        static bool ShowOutOfMoneyMenu()
+        {
+            int selected = 0;
+            string[] menu = { "Reset Game", "Return to Main Menu" };
+            int safeTop = Math.Max(Console.WindowHeight - menu.Length - 1, 0);
 
+            while (true)
+            {
+                Console.Clear();
+                Banner.ShowEndBanner();
+                Console.WriteLine("\nYou are out of money!");
+
+                for (int i = 0; i < menu.Length; i++)
+                    Console.WriteLine((i == selected ? "> " : "  ") + menu[i]);
+
+                ConsoleKey key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.UpArrow) selected = (selected - 1 + menu.Length) % menu.Length;
+                else if (key == ConsoleKey.DownArrow) selected = (selected + 1) % menu.Length;
+                else if (key == ConsoleKey.Enter)
+                    return selected == 0;
+            }
+        }
+        
         static void PlayGame()
         {
             if (playerBalance <= 0) return;
@@ -82,7 +115,7 @@
 
             int bet = ShowBetMenu();
             playerBalance -= bet;
-            
+
             player.AddCard(deck.DrawCard());
             dealer.AddCard(deck.DrawCard());
             player.AddCard(deck.DrawCard());
@@ -144,6 +177,7 @@
 
             int pTotal = player.GetTotal();
             int dTotal = dealer.GetTotal();
+
             Console.WriteLine($"\nYour Total: {pTotal}");
             Console.WriteLine($"Dealer Total: {dTotal}");
 
@@ -162,7 +196,7 @@
                 Console.WriteLine("Dealer Wins!");
             }
         }
-
+        
         static int ShowBetMenu()
         {
             int selected = 0;
@@ -179,7 +213,7 @@
                 {
                     string label = betOptions[i] switch
                     {
-                        -1 => "Custom (Specify the amount)",
+                        -1 => "Custom amount",
                         0 => "All In",
                         _ => betOptions[i] + "฿"
                     };
@@ -187,20 +221,24 @@
                 }
 
                 ConsoleKey key = Console.ReadKey(true).Key;
+
                 if (key == ConsoleKey.UpArrow) selected = (selected - 1 + betOptions.Length) % betOptions.Length;
                 else if (key == ConsoleKey.DownArrow) selected = (selected + 1) % betOptions.Length;
                 else if (key == ConsoleKey.Enter)
                 {
-                    if (betOptions[selected] == 0) return playerBalance; // All In
+                    if (betOptions[selected] == 0) return playerBalance;
                     else if (betOptions[selected] == -1)
                     {
                         while (true)
                         {
-                            Console.Write("\nSelect bet amount: ");
+                            Console.Write("\nEnter amount: ");
                             string input = Console.ReadLine();
-                            if (int.TryParse(input, out int customBet) && customBet > 0 && customBet <= playerBalance)
+
+                            if (int.TryParse(input, out int customBet) &&
+                                customBet > 0 && customBet <= playerBalance)
                                 return customBet;
-                            Console.WriteLine($"Enter the amount you have (1-{playerBalance})");
+
+                            Console.WriteLine($"Enter a number between 1 and {playerBalance}");
                         }
                     }
                     else
@@ -211,7 +249,7 @@
                 }
             }
         }
-
+        
         static string HitStandMenu()
         {
             int selected = 0;
@@ -234,7 +272,7 @@
                 else if (key == ConsoleKey.Enter) return options[selected];
             }
         }
-
+        
         static bool AskReplayMenu()
         {
             int selected = 0;
@@ -252,6 +290,7 @@
                 }
 
                 ConsoleKey key = Console.ReadKey(true).Key;
+
                 if (key == ConsoleKey.UpArrow) selected = (selected - 1 + items.Length) % items.Length;
                 else if (key == ConsoleKey.DownArrow) selected = (selected + 1) % items.Length;
                 else if (key == ConsoleKey.Enter) return selected == 0;
