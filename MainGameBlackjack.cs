@@ -1,4 +1,4 @@
-﻿namespace Porject_Gi_113
+namespace Porject_Gi_113
 {
     public class MainGameBlackjack
     {
@@ -10,7 +10,10 @@
             Console.Title = "Blackjack - Console Game";
             ShowMenu();
         }
-        
+
+        // ============================
+        // MAIN MENU (เพิ่ม Reset Game)
+        // ============================
         static void ShowMenu()
         {
             int selected = 0;
@@ -39,7 +42,8 @@
                 }
             }
         }
-        
+
+        // RESET GAME
         static void ResetGame()
         {
             playerBalance = 1000;
@@ -50,7 +54,10 @@
             Console.WriteLine("Press any key to return...");
             Console.ReadKey();
         }
-        
+
+        // ============================
+        // HOW TO PLAY
+        // ============================
         static void ShowHowToPlay()
         {
             Console.Clear();
@@ -62,7 +69,10 @@
             Console.WriteLine("\nPress any key to return...");
             Console.ReadKey();
         }
-        
+
+        // ============================
+        // GAME LOOP
+        // ============================
         static void PlayGameLoop()
         {
             bool playAgain;
@@ -74,14 +84,15 @@
                 if (playerBalance <= 0)
                 {
                     bool choose = ShowOutOfMoneyMenu();
-                    if (choose) ResetGame();
-                    return;
+                    if (choose) ResetGame();  // Reset
+                    return;                  // กลับเมนู
                 }
 
                 playAgain = AskReplayMenu();
             } while (playAgain);
         }
-        
+
+        // เมนูเวลาเงินหมด
         static bool ShowOutOfMoneyMenu()
         {
             int selected = 0;
@@ -104,7 +115,10 @@
                     return selected == 0;
             }
         }
-        
+
+        // ============================
+        // GAME LOGIC
+        // ============================
         static void PlayGame()
         {
             if (playerBalance <= 0) return;
@@ -157,7 +171,8 @@
                 }
                 else break;
             }
-            
+
+            // Dealer turn
             Console.WriteLine("\nDealer’s Turn:");
             CardDisplay.ShowCardGUI(dealer.Cards);
 
@@ -272,7 +287,10 @@
                 else if (key == ConsoleKey.Enter) return options[selected];
             }
         }
-        
+
+        // ============================
+        // PLAY AGAIN MENU
+        // ============================
         static bool AskReplayMenu()
         {
             int selected = 0;
